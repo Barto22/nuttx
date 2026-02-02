@@ -855,10 +855,11 @@ if(CONFIG_BUILD_PROTECTED)
   endif()
 
   # Propagate architecture-specific compile options to link options for nuttx_user
-  # This is necessary because CMake doesn't automatically forward compile flags.
+  # This is necessary because CMake doesn't automatically forward compile flags
+  # when using -nostartfiles. Match all -m flags except preprocessor flags.
   get_property(nuttx_compile_options DIRECTORY PROPERTY COMPILE_OPTIONS)
   foreach(opt ${nuttx_compile_options})
-    if(opt MATCHES "^-m(arch|cpu|tune|fpu|float-abi|thumb)")
+    if(opt MATCHES "^-m" AND NOT opt MATCHES "^-M(M|D|P|F|T|Q)")
       target_link_options(nuttx_user PRIVATE ${opt})
     endif()
   endforeach()
