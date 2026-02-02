@@ -82,6 +82,20 @@ SECTIONS
         _ebss = ABSOLUTE(.);
     } > ksram
 
+    /* Thread local storage sections */
+
+    .tdata : {
+        _stdata = ABSOLUTE(.);
+        *(.tdata .tdata.* .gnu.linkonce.td.*)
+        _etdata = ABSOLUTE(.);
+    } > ksram AT > kflash
+
+    .tbss : {
+        _stbss = ABSOLUTE(.);
+        *(.tbss .tbss.* .gnu.linkonce.tb.* .tcommon)
+        _etbss = ABSOLUTE(.);
+    } > ksram
+
     /* Stabs debugging sections */
 
     .stab 0 : { *(.stab) }

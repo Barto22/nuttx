@@ -854,6 +854,15 @@ if(CONFIG_BUILD_PROTECTED)
       -Wl,--undefined=${CONFIG_INIT_ENTRYPOINT})
   endif()
 
+  # Propagate architecture-specific compile options to link options for nuttx_user
+  # This is necessary because CMake doesn't automatically forward compile flags.
+  get_property(nuttx_compile_options DIRECTORY PROPERTY COMPILE_OPTIONS)
+  foreach(opt ${nuttx_compile_options})
+    if(opt MATCHES "^-m(arch|cpu|tune|fpu|float-abi|thumb)")
+      target_link_options(nuttx_user PRIVATE ${opt})
+    endif()
+  endforeach()
+
   target_link_libraries(
     nuttx_user
     PRIVATE ${user_ldscript}
